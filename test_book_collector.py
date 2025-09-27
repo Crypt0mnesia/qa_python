@@ -41,11 +41,11 @@ class TestBooksCollector:
     def test_set_book_genre(self, collector):
         collector.add_new_book('Книга')
         collector.set_book_genre('Книга', 'Фантастика')
-        assert collector.get_book_genre('Книга') == 'Фантастика'
+        assert collector.books_genre['Книга'] == 'Фантастика'
 
     def test_get_book_genre(self, collector):
         collector.add_new_book('Книга')
-        collector.set_book_genre('Книга', 'Ужасы')
+        collector.books_genre['Книга'] = 'Ужасы'
         assert collector.get_book_genre('Книга') == 'Ужасы'
 
     def test_get_books_with_specific_genre(self, collector):
@@ -59,8 +59,8 @@ class TestBooksCollector:
     def test_get_books_genre(self, collector):
         collector.add_new_book('Книга 1')
         collector.add_new_book('Книга 2')
-        books = collector.get_books_genre()
-        assert len(books) == 2
+        result = collector.get_books_genre()
+        assert result == {'Книга 1': '', 'Книга 2': ''}
 
     @pytest.mark.parametrize('book_name, genre, expected', [
         ('Ужасы', 'Ужасы', False),
@@ -72,23 +72,23 @@ class TestBooksCollector:
     def test_get_books_for_children_cases(self, collector, book_name, genre, expected):
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
-
         children_books = collector.get_books_for_children()
         assert (book_name in children_books) == expected
 
+
     def test_add_book_in_favorites(self, collector):
-        collector.add_new_book('Книга')
-        collector.add_book_in_favorites('Книга')
-        assert 'Книга' in collector.get_list_of_favorites_books()
+        collector.add_new_book('Одиссея 2001')
+        collector.add_book_in_favorites('Одиссея 2001')
+        assert 'Одиссея 2001' in collector.get_list_of_favorites_books()
 
     def test_delete_book_from_favorites(self, collector):
-        collector.add_new_book('Книга')
-        collector.add_book_in_favorites('Книга')
-        collector.delete_book_from_favorites('Книга')
-        assert 'Книга' not in collector.get_list_of_favorites_books()
+        collector.add_new_book('Одиссея 2001')
+        collector.add_book_in_favorites('Одиссея 2001')
+        collector.delete_book_from_favorites('Одиссея 2001')
+        assert 'Одиссея 2001' not in collector.get_list_of_favorites_books()
 
     def test_get_list_of_favorites_books(self, collector):
-        collector.add_new_book('Книга')
-        collector.add_book_in_favorites('Книга')
+        collector.add_new_book('Одиссея 2001')
+        collector.add_book_in_favorites('Одиссея 2001')
         favorites = collector.get_list_of_favorites_books()
-        assert favorites == ['Книга']
+        assert favorites == ['Одиссея 2001']
